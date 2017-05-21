@@ -16,7 +16,6 @@ void printbincharpad(char c);
 /**************************************************************************************************************
 * GLOBAL VARIABLES
 */
-// The payload + CRC are 31 bytes. This way the complete packet to be received will fit in the RXFIFO
 unsigned char rxBuffer[4];  // Buffer used to hold data read from the RXFIFO (4 bytes are read at a time)
 unsigned char rxPacket[64]; // Data + CRC after being interleaved and decoded
 
@@ -357,25 +356,25 @@ int main(int argc, char **argv)
 //-----------------------------------[data received!]-----------------------------------------
 
 
-	unsigned short checksum;
-	unsigned short nBytes;
-	unsigned char *pDecData = rxPacket; // Destination for decoded data
+    unsigned short checksum;
+    unsigned short nBytes;
+    unsigned char *pDecData = rxPacket; // Destination for decoded data
 
-	unsigned short count = 0;
-	unsigned char premable_offset = 0; //count of preamble bytes sent by the CC1101 ; default 4 
-	unsigned char sync_offset = 0;     //count of syncword bytes sent by the CC1101 ; default 4 
+    unsigned short count = 0;
+    unsigned char premable_offset = 0; //count of preamble bytes sent by the CC1101 ; default 4 
+    unsigned char sync_offset = 0;     //count of syncword bytes sent by the CC1101 ; default 4 
+ 
+    unsigned char NUMBER_OF_BYTES_BEFORE_DECODING;
+    unsigned char NUMBER_OF_BYTES_AFTER_DECODING;
 	 
-	unsigned char NUMBER_OF_BYTES_BEFORE_DECODING;
-	unsigned char NUMBER_OF_BYTES_AFTER_DECODING;
-	 
-	//automatic preamble offset detection
-	while(rx_data[premable_offset] == 0xAA)  //0xAA is fixed preamble value
-	{         
-	 	premable_offset++;
-	}
+    //automatic preamble offset detection
+    while(rx_data[premable_offset] == 0xAA)  //0xAA is fixed preamble value
+    {         
+	 premable_offset++;
+    }
     //printf("premable_len: %d\n",premable_offset);
 
-	//automatic sync word offset detection
+    //automatic sync word offset detection
     if (premable_offset == 0) 
     {
     	sync_offset = 0; //no sync word and no preamble in setting
@@ -392,9 +391,9 @@ int main(int argc, char **argv)
 
     //calculates the byte count for FEC decoding
     NUMBER_OF_BYTES_BEFORE_DECODING = byte_count - (premable_offset + sync_offset);     //byte count of encoded payload data incl. interleaving 
-	NUMBER_OF_BYTES_AFTER_DECODING = ((NUMBER_OF_BYTES_BEFORE_DECODING - 4) / 2 ) + 1;	 //byte count of decoded payload
-	//printf("bytes before decoding: %d\n",NUMBER_OF_BYTES_BEFORE_DECODING);
-	//printf("bytes  after decoding: %d\n",NUMBER_OF_BYTES_AFTER_DECODING);
+    NUMBER_OF_BYTES_AFTER_DECODING = ((NUMBER_OF_BYTES_BEFORE_DECODING - 4) / 2 ) + 1;	 //byte count of decoded payload
+    //printf("bytes before decoding: %d\n",NUMBER_OF_BYTES_BEFORE_DECODING);
+    //printf("bytes  after decoding: %d\n",NUMBER_OF_BYTES_AFTER_DECODING);
 
     /*
 	printf("Payload FEC encoded:");
