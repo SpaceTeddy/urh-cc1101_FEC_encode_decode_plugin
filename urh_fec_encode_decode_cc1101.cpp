@@ -2,7 +2,7 @@
 *  	Universal Radio Hacker (urh) plugin to encode and decode cc1101 messages, 
 *	which uses the cc1101 FEC (forward error correction) feature
 *
-*	simply compile with: g++ urh_fec_decode_cc1101.cpp -o urh_fec_decode_cc1101
+*	simply compile with: g++ urh_fec_encode_decode_cc1101.cpp -o urh_fec_encode_decode_cc1101
 *
 *	start the plugin in urh as external program with: 
 *	urh_fec_encode_decode_cc1101 [e | d | f]
